@@ -39,12 +39,13 @@ Project Organization
     │   │   └── make_dataset.py
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
+    │   │   └── build_rtree.py
+    │   │   └── build_bbox.py
     │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
+    │   ├── models         <- Scripts to search rtrees and then use EDR to compute top k
+    │   │   │                 trajectories
     │   │   ├── predict_model.py
-    │   │   └── train_model.py
+    │   │   └── search_rtree.py
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py

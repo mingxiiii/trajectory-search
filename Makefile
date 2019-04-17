@@ -13,6 +13,7 @@ ROW_DATA='./data/raw/gps_20161001'
 PROCESSED_DATA='./data/processed/gps_20161001_trajectory.txt'
 QUERY_DATA='./data/external/gps_20161002_query.txt'
 RTREE_PATH='./data/processed/my_rtree'
+RTREE_ID_DICT='./data/processed/rtree_id_dict.txt'
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -29,13 +30,16 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
+setup:
+	export PYSPARK_SUBMIT_ARGS="--master local[2] pyspark-shell";
+
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
 
 ## Search rtree
 search:
-	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH)
+	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH) $(RTREE_ID_DICT)
 
 ## Delete all compiled Python files
 clean:

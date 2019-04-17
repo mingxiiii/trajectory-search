@@ -41,15 +41,14 @@ def get_bbox(qmean_list):
 
 
 def build_qgram(data, k=20):
-    bbox = {}  # dictionary - key:order_id, value: (x_min,y_min,x_max,y_max)
     order_id_list = []
     qgram = {}
     for order_id, values in data.items():
         order_id_list.append(order_id)
         grams = [values[idx:idx + k] for idx in range(len(values))]  # build q-grams
-        qgram[order_id] = [tuple(map(np.mean, zip(*x))) for x in grams]  # find q-gram means
-        bbox[order_id] = get_bbox(qgram[order_id])  # calculate bounding box range
-    return qgram, bbox, order_id_list
+        grams_mean = [tuple(map(np.mean, zip(*x))) for x in grams]  # find q-gram means
+        qgram[order_id] = [(np.around(x[0], decimals=5), np.around(x[1], decimals=5)) for x in grams_mean]  # find q-gram means
+    return qgram, order_id_list
 
 
 def build_id_dict(id_list):
@@ -62,11 +61,11 @@ def build_id_dict(id_list):
 
 
 def read_id_dict(path):
-    objects = []
-    with (open(path, "rb")) as openfile:
+    print(path)
+    with open(path, 'rb') as openfile:
         while True:
             try:
-                objects.append(pickle.load(openfile))
+                objects = pickle.load(openfile)
             except EOFError:
                 break
     return objects

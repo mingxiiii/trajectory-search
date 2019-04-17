@@ -25,10 +25,13 @@ if __name__ == "__main__":
     #     print("%s: %i" % (word, count))
     #
     # spark.stop()
-    #
-    conf = SparkConf().setAppName("PythonWordCount").setMaster("cs5425")
+
+    conf = SparkConf().setAppName("PythonWordCount").setMaster("local")
     sc = SparkContext(conf=conf)
 
-    data = [((1, 2), ((1, 2,), (3, 4,))), ((1, 2), ((1, 2,), (3, 4,))), ((1, 2), ((1, 2,), (3, 4,))),
+    data = [((1, 2), ((1, 2,), (3, 4,))),
+            ((1, 2), ((1, 2,), (3, 4,))),
+            ((1, 2), ((1, 2,), (3, 4,))),
             ((1, 2), ((1, 2,), (3, 4,)))]
     distData = sc.parallelize(data)
+    distData.foreach(print)
