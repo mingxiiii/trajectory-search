@@ -19,7 +19,7 @@ def load_trajectory(trajectory_path, n=None):
             values = [(float(x), float(y)) for (x,y) in values]
 
             #dictionary -  key: order_id, value: array of (x,y) coordinates for all timestamps, timestamp info not saved
-            if len(values) > 50 and len(values) < 400:
+            if len(values) >= 50 and len(values) <= 400:
                 trajectory[order_id] = values
                 if n is not None:
                     if count%n == 0:

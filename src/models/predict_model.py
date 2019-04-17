@@ -39,6 +39,7 @@ def subcost(t1, t2):
 def searchResult(k):
     with open("./data/processed/candidate_trajectory.txt", "rb") as f:
         candidateList = pickle.load(f)
+    print(candidateList[0][1][0:10])
     topK = candidateList[0][1][0:k]
     queryID = candidateList[0][0]
     with open("./data/processed/query_id_dict.txt", "rb") as f:
@@ -57,29 +58,29 @@ def searchResult(k):
     result_map = {}
     for t in result:
          # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
-        result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_id_dict[t]]),np.array(real_query_dict[query_id_dict[queryID]]), "spherical")
+        result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_id_dict[t]]),np.array(real_query_dict[query_id_dict[queryID]]), "spherical")*max(len(trajectory_dict[rtree_id_dict[t]]),len(real_query_dict[query_id_dict[queryID]]))
     #print(result_map)
     fullCandidates = candidateList[0][1] # list of [ID, count]
     i = k
     query_tra = real_query_dict[query_id_dict[queryID]]
     lengthQ = len(query_tra)
     bestSoFar = result_map[topK[i-1][0]]
-    print("first best: ")
-    print(bestSoFar)
     while i < len(fullCandidates):
         candidate = fullCandidates[i]
-        tra_s = trajectory_dict[rtree_id_dict[candidate[0]]]
+        try:
+            tra_s = trajectory_dict[rtree_id_dict[candidate[0]]]
+        except KeyError:
+            pass
         countValue = candidate[1]
         lengthS = len(tra_s)
         if countValue >= (max(lengthQ,lengthS) - (bestSoFar+1)*qGramSize):
             # pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
             # for s in pointedByCounts:
-                print("realDist")
-                realDist = calculateEdr(tra_s, query_tra, "spherical")
+                realDist = tdist.edr(np.array(tra_s), np.array(query_tra), "spherical")*max(len(tra_s), len(query_tra))
                 print(realDist)
                 if(realDist<bestSoFar):
                     result_map[candidate[0]] = realDist
-                    bestSoFar = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[k-1]
+                    bestSoFar = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[k-1][1]
         else:
             break
         i+=1
@@ -88,4 +89,4 @@ def searchResult(k):
 
 
 if __name__ == "__main__":
-    print(searchResult(1))
+    print(searchResult(7))
