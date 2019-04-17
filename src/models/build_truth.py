@@ -16,35 +16,25 @@ def main(query_path, train_path, query_id_path, train_id_path):
     # print(train_id_dict)
 
     result = []
-    counter = 0
     for query_id, query_trajectory in query_data.items():
-        if query_id == '9dd7b97ca663c8593a80ce816cabf654':
-            query_key = query_id_dict[query_id]
-            print(query_key)
-            distance_list = []
-            train_key_list = []
-            for train_id, train_trajectory in train_data.items():
-                try:
-                    counter += 1
-                    train_key = train_id_dict[train_id]
-                    distance = tdist.edr(np.array(train_trajectory), np.array(query_trajectory), "spherical")*max(len(train_trajectory),len(query_trajectory))
-                    distance_list.append(distance)
-                    train_key_list.append(train_key)
-                    print("try successful")
-                    print(distance)
-                except KeyError:
-                    print(train_key)
-                    print(train_id)
-                    pass
-                if counter > 300:
-                    break
-            ix = sorted(range(len(distance_list)), key=lambda k: distance_list[k])
-            distance_list_sorted = [distance_list[i] for i in ix]
-            train_key_sorted = [train_key_list[i] for i in ix]
-            trajectory_result = [(e1, e2) for e1, e2 in zip(train_key_sorted, distance_list_sorted)]
-            result.append([query_key, trajectory_result])
-            print(result)
-            return result
+        query_key = query_id_dict[query_id]
+        print(query_key)
+        distance_list = []
+        train_key_list = []
+        for train_id, train_trajectory in train_data.items():
+            try:
+                train_key = train_id_dict[train_id]
+                distance = tdist.edr(np.array(train_trajectory), np.array(query_trajectory), "spherical")*max(len(train_trajectory),len(query_trajectory))
+                distance_list.append(distance)
+                train_key_list.append(train_key)
+            except KeyError:
+                pass
+        ix = sorted(range(len(distance_list)), key=lambda k: distance_list[k])
+        distance_list_sorted = [distance_list[i] for i in ix]
+        train_key_sorted = [train_key_list[i] for i in ix]
+        trajectory_result = [(e1, e2) for e1, e2 in zip(train_key_sorted, distance_list_sorted)]
+        result.append([query_key, trajectory_result])
+    return result
 
 
 if __name__ == '__main__':
