@@ -69,13 +69,13 @@ def read_pickle(path):
                 objects = pickle.load(openfile)
             except EOFError:
                 break
+    openfile.close()
     return objects
 
 
-def save_pickle(obj_list, path):
+def save_pickle(obj, path):
     with (open(path, "wb")) as openfile:
-        for obj in obj_list:
-            pickle.dump(obj, openfile)
-        openfile.close()
+        pickle.dump(obj, openfile)
+    openfile.close()
     return True
 

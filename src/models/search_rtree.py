@@ -9,7 +9,7 @@ import pickle
 
 def main(query_path, rtree_path):
 
-    query = load_trajectory(query_path, n=1)
+    query = load_trajectory(query_path)
     qry_qgram, qry_id_list = build_qgram(query)
     qry_id_dict = build_id_dict(qry_id_list)
     data_index = Rtree(rtree_path)
