@@ -8,12 +8,13 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = trajectory-search
-PYTHON_INTERPRETER = python3
+PYTHON_INTERPRETER = python
 ROW_DATA='./data/raw/gps_20161001'
 PROCESSED_DATA='./data/processed/gps_20161001_trajectory.txt'
 QUERY_DATA='./data/external/gps_20161002_query.txt'
 RTREE_PATH='./data/processed/my_rtree'
 RTREE_ID_DICT='./data/processed/rtree_id_dict.txt'
+RTREE_ID_DICT2='./data/processed/rtree_id_dict2.txt'
 QUERY_ID_DICT='./data/processed/query_id_dict.txt'
 
 ifeq (,$(shell which conda))
@@ -41,6 +42,15 @@ data: requirements
 ## Search rtree
 search:
 	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH)
+
+## Search top-k
+predict:
+	$(PYTHON_INTERPRETER) src/models/predict_model.py
+
+## Make truth
+truth:
+	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_DATA) $(PROCESSED_DATA) $(QUERY_ID_DICT) $(RTREE_ID_DICT2)
+
 
 ## Delete all compiled Python files
 clean:

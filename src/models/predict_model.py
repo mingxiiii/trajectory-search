@@ -1,8 +1,13 @@
-from pyspark import SparkContext, SparkConf
-import sparkpickle
+from os import path
+import sys
+# sys.path.append(path.abspath('/Users/mingxidai/Documents/project/trajectory-search/'))
+sys.path.append(path.abspath('/Users/mingxidai/Documents/Master/traj-dist-master'))
+
 import pickle
 import time
+import traj_dist.distance as tdist
 from src.features.build_bbox import load_trajectory
+import numpy as np
 #
 # RDD: (test-key,Iter[(train_key,count),(train_key,count)])
 # change threshold
@@ -32,36 +37,35 @@ def subcost(t1, t2):
 
 
 def searchResult(k):
-    with open("C:/Users/Haonan/PycharmProjects/trajectory-search/candidate_trajectory.txt", "rb") as f:
+    with open("./data/processed/candidate_trajectory.txt", "rb") as f:
         candidateList = pickle.load(f)
-    topK = candidateList[1][0:k]
-    queryID = candidateList[0]
-    print(topK)
-    with open("C:/Users/Haonan/PycharmProjects/trajectory-search/rtree_id_dict.txt", "rb") as f:
-        rtree_id_dict = pickle.load(f)
-    with open("C:/Users/Haonan/PycharmProjects/trajectory-search/query_id_dict.txt", "rb") as f:
+    topK = candidateList[0][1][0:k]
+    queryID = candidateList[0][0]
+    with open("./data/processed/query_id_dict.txt", "rb") as f:
         query_id_dict = pickle.load(f)
-    trajectory_dict = load_trajectory("C:/Users/Haonan/PycharmProjects/trajectory-search/gps_20161001_trajectory.txt")
-    real_query_dict = load_trajectory("C:/Users/Haonan/PycharmProjects/trajectory-search/gps_20161002_query.txt")
+    with open("./data/processed/rtree_id_dict2.txt", "rb") as f:
+        rtree_id_dict = pickle.load(f)
+    trajectory_dict = load_trajectory("./data/processed/gps_20161001_trajectory.txt")
+    real_query_dict = load_trajectory("./data/processed/gps_20161002_query.txt")
     query_id_dict = {v: k for k, v in query_id_dict.items()}
     result = list(map(lambda x: x[0], topK))
-    print(query_id_dict[queryID])
-    print(trajectory_dict[rtree_id_dict[result[0]]])
+    #print(query_id_dict[queryID])
+    #print(queryID)
+    #print(trajectory_dict[rtree_id_dict[result[0]]])
 
-    print(real_query_dict[query_id_dict[queryID]])
-    print("zheli")
+    #print(real_query_dict[query_id_dict[queryID]])
     result_map = {}
     for t in result:
-         result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
-    print("here!")
-    print(result_map)
-
-
-    fullCandidates = candidateList[1] # list of [ID, count]
+         # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
+        result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_id_dict[t]]),np.array(real_query_dict[query_id_dict[queryID]]), "spherical")
+    #print(result_map)
+    fullCandidates = candidateList[0][1] # list of [ID, count]
     i = k
     query_tra = real_query_dict[query_id_dict[queryID]]
     lengthQ = len(query_tra)
-    bestSoFar = result_map[topK[i][0]]
+    bestSoFar = result_map[topK[i-1][0]]
+    print("first best: ")
+    print(bestSoFar)
     while i < len(fullCandidates):
         candidate = fullCandidates[i]
         tra_s = trajectory_dict[rtree_id_dict[candidate[0]]]
@@ -70,7 +74,9 @@ def searchResult(k):
         if countValue >= (max(lengthQ,lengthS) - (bestSoFar+1)*qGramSize):
             # pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
             # for s in pointedByCounts:
-                realDist = calculateEdr(tra_s,query_tra)
+                print("realDist")
+                realDist = calculateEdr(tra_s, query_tra, "spherical")
+                print(realDist)
                 if(realDist<bestSoFar):
                     result_map[candidate[0]] = realDist
                     bestSoFar = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[k-1]
@@ -81,6 +87,5 @@ def searchResult(k):
     return sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[0:k]
 
 
-
 if __name__ == "__main__":
-    searchResult(1)
+    print(searchResult(1))

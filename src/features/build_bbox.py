@@ -45,7 +45,7 @@ def build_id_dict(id_list):
         order_dict[id] = num
 
     #key: trajectory id in string, value: encoded key
-    return id_dict
+    return order_dict
 
 def build_order_dict(id_list):
     order_dict = {}
@@ -71,7 +71,7 @@ def read_pickle(path):
 
 def save_pickle(obj, path):
     with (open(path, "wb")) as openfile:
-        pickle.dump(obj, openfile)
+        pickle.dump(obj, openfile, protocol=2)
     openfile.close()
     return True
 
