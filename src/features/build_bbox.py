@@ -17,29 +17,14 @@ def load_trajectory(trajectory_path, n=None):
             values = values.split(",")[:-1]
             values = [x.split(":")[1:] for x in values]
             values = [(float(x), float(y)) for (x,y) in values]
-            #d ictionary -  key: order_id, value: array of (x,y) coordinates for all timestamps, timestamp info not saved
+
+            #dictionary -  key: order_id, value: array of (x,y) coordinates for all timestamps, timestamp info not saved
             if len(values) > 50 and len(values) < 400:
                 trajectory[order_id] = values
                 if n is not None:
                     if count%n == 0:
                         break
     return trajectory
-
-
-def get_bbox(qmean_list):
-    x_min = y_min = 10 ** 9
-    x_max = y_max = -1
-    for (x, y) in qmean_list:
-        if x < x_min:
-            x_min = x
-        if x > x_max:
-            x_max = x
-        if y < y_min:
-            y_min = y
-        if y > y_max:
-            y_max = y
-    return x_min, y_min, x_max, y_max
-
 
 def build_qgram(data, k=20):
     order_id_list = []
@@ -58,8 +43,19 @@ def build_id_dict(id_list):
     le_user.fit(id_list)
     for id, num in zip(id_list, le_user.transform(id_list)):
         order_dict[id] = num
-    return order_dict
 
+    #key: trajectory id in string, value: encoded key
+    return id_dict
+
+def build_order_dict(id_list):
+    order_dict = {}
+    le_user = preprocessing.LabelEncoder()
+    le_user.fit(id_list)
+    for id, num in zip(id_list, le_user.transform(id_list)):
+        order_dict[num] = id
+
+    #key: key, value: trajectory id in string
+    return order_dict
 
 def read_pickle(path):
     print(path)
