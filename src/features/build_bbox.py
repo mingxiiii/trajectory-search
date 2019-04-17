@@ -18,10 +18,11 @@ def load_trajectory(trajectory_path, n=None):
             values = [x.split(":")[1:] for x in values]
             values = [(float(x), float(y)) for (x,y) in values]
             #d ictionary -  key: order_id, value: array of (x,y) coordinates for all timestamps, timestamp info not saved
-            trajectory[order_id] = values
-            if n is not None:
-                if count%n == 0:
-                    break
+            if len(values) > 50 and len(values) < 400:
+                trajectory[order_id] = values
+                if n is not None:
+                    if count%n == 0:
+                        break
     return trajectory
 
 
@@ -60,7 +61,7 @@ def build_id_dict(id_list):
     return order_dict
 
 
-def read_id_dict(path):
+def read_pickle(path):
     print(path)
     with open(path, 'rb') as openfile:
         while True:
@@ -71,7 +72,7 @@ def read_id_dict(path):
     return objects
 
 
-def save_id_dict(obj_list, path):
+def save_pickle(obj_list, path):
     with (open(path, "wb")) as openfile:
         for obj in obj_list:
             pickle.dump(obj, openfile)

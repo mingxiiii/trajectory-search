@@ -14,6 +14,7 @@ PROCESSED_DATA='./data/processed/gps_20161001_trajectory.txt'
 QUERY_DATA='./data/external/gps_20161002_query.txt'
 RTREE_PATH='./data/processed/my_rtree'
 RTREE_ID_DICT='./data/processed/rtree_id_dict.txt'
+QUERY_ID_DICT='./data/processed/query_id_dict.txt'
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -39,7 +40,7 @@ data: requirements
 
 ## Search rtree
 search:
-	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH) $(RTREE_ID_DICT)
+	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH)
 
 ## Delete all compiled Python files
 clean:
