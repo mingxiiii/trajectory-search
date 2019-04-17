@@ -1,6 +1,7 @@
 from pyspark import SparkContext, SparkConf
 import sparkpickle
 import pickle
+import time
 from src.features.build_bbox import load_trajectory
 #
 # RDD: (test-key,Iter[(train_key,count),(train_key,count)])
@@ -45,12 +46,14 @@ def searchResult(k):
     query_id_dict = {v: k for k, v in query_id_dict.items()}
     result = list(map(lambda x: x[0], topK))
     print(query_id_dict[queryID])
-    print(result)
+    print(trajectory_dict[rtree_id_dict[result[0]]])
 
-
+    print(real_query_dict[query_id_dict[queryID]])
+    print("zheli")
     result_map = {}
     for t in result:
          result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
+    print("here!")
     print(result_map)
 
 
@@ -65,11 +68,11 @@ def searchResult(k):
         countValue = candidate[1]
         lengthS = len(tra_s)
         if countValue >= (max(lengthQ,lengthS) - (bestSoFar+1)*qGramSize):
-            pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
-            for s in pointedByCounts:
-                realDist = calculateEdr(trajectory_dict[rtree_id_dict[s[0]]],query_tra)
+            # pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
+            # for s in pointedByCounts:
+                realDist = calculateEdr(tra_s,query_tra)
                 if(realDist<bestSoFar):
-                    result_map[s[0]] = realDist
+                    result_map[candidate[0]] = realDist
                     bestSoFar = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[k-1]
         else:
             break
@@ -80,4 +83,4 @@ def searchResult(k):
 
 
 if __name__ == "__main__":
-    print(calculateEdr([[1,2],[2,3],[3,4]],[[1,1],[2,2],[3,3],[4,4]]))
+    searchResult(1)
