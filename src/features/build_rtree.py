@@ -23,8 +23,8 @@ def main(trajectory_path):
         #    1. node id
         #    2. bounding box(point): (x,y,x,y)
         #    3. data inside each node: trajectory's key from order_dict
-        data_idx.insert(node_id, (qgram[0],qgram[1],qgram[0],qgram[1]), obj=(id_dict[key]))
-        node_id += 1
+            data_idx.insert(node_id, (qgram[0],qgram[1],qgram[0],qgram[1]), obj=(id_dict[key]))
+            node_id += 1
     print("Finished...")
 
 
