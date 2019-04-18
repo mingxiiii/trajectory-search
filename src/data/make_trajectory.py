@@ -8,7 +8,7 @@ import re
 import sys
 
 
-def main(input_filepath, output_filepath):
+def main(input_filepath, output_filepath, n=50):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
@@ -32,19 +32,20 @@ def main(input_filepath, output_filepath):
         except KeyError:
             data[orderId] = []
             data[orderId].append(val)
-        if counter % 5000 == 0:
-            break
+        # if counter % 5000 == 0:
+        #     break
 
     f = io.open(output_filepath, 'w', encoding="utf8", buffering=io.DEFAULT_BUFFER_SIZE)
     for key, val in data.items():
-        f.write(key + '\t')
-        time_stamp = [int(e[0]) for e in val]
-        time_stamp_len = len(time_stamp)
-        sorted_ix = sorted(range(time_stamp_len), key=lambda k: time_stamp[k])
-        for ix in sorted_ix:
-            item = val[ix]
-            f.write(':'.join(item) + ',')
-        f.write('\r\n')
+        if len(val) >= 50 and len(val) <= 400:
+            f.write(key + '\t')
+            time_stamp = [int(e[0]) for e in val]
+            time_stamp_len = len(time_stamp)
+            sorted_ix = sorted(range(time_stamp_len), key=lambda k: time_stamp[k])
+            for ix in sorted_ix:
+                item = val[ix]
+                f.write(':'.join(item) + ',')
+            f.write('\r\n')
     f.close()
 
 

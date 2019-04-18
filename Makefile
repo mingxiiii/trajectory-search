@@ -9,8 +9,8 @@ BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = trajectory-search
 PYTHON_INTERPRETER = python
-ROW_DATA='./data/raw/gps_20161001'
-PROCESSED_DATA='./data/processed/gps_20161001_trajectory.txt'
+QUERY_ROW_DATA='./data/raw/gps_20161002'
+QUERY_PROCESSED_DATA='./data/processed/gps_20161002_query.txt'
 QUERY_DATA='./data/external/gps_20161002_query.txt'
 RTREE_PATH='./data/processed/my_rtree'
 RTREE_ID_DICT='./data/processed/rtree_id_dict.txt'
@@ -36,15 +36,15 @@ setup:
 	export PYSPARK_SUBMIT_ARGS="--master local[2] pyspark-shell";
 
 ## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py
+query:
+	$(PYTHON_INTERPRETER) src/data/make_trajectory.py $(QUERY_ROW_DATA) $(QUERY_PROCESSED_DATA)
 
 ## Search rtree
 search:
 	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH)
 
 ## Search top-k
-predict:
+prediction:
 	$(PYTHON_INTERPRETER) src/models/predict_model.py
 
 ## Make truth

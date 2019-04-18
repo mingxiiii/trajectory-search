@@ -2,7 +2,6 @@ from os import path
 import sys
 # sys.path.append(path.abspath('/Users/mingxidai/Documents/project/trajectory-search/'))
 sys.path.append(path.abspath('/Users/mingxidai/Documents/Master/traj-dist-master'))
-
 import pickle
 import time
 import traj_dist.distance as tdist
@@ -13,6 +12,7 @@ import numpy as np
 # change threshold
 threshold = 0.05
 qGramSize = 20
+
 
 def match(coor1,coor2):
     return abs(coor1[0]-coor2[0]) <= threshold and abs(coor1[1]-coor2[1]) <= threshold
@@ -42,7 +42,7 @@ def searchResult(k):
         candidateList = pickle.load(f)
     # candidateList => [[queryID_1,[(traID1, count1),(traID2, count2)]], [...]]
     with open("./data/processed/query_id_dict.txt", "rb") as f:
-        query_id_dict = pickle.load(f)
+        query_id_dict_original = pickle.load(f)
     with open("./data/processed/rtree_id_dict2.txt", "rb") as f:
         rtree_id_dict = pickle.load(f)
     trajectory_dict = load_trajectory("./data/processed/gps_20161001_trajectory.txt")
@@ -52,7 +52,7 @@ def searchResult(k):
         topK = candidateList[index][1][0:k]
         queryID = candidateList[index][0]
         # reverse the query Dict: fakeID -> realID
-        query_id_dict = {v: k for k, v in query_id_dict.items()}
+        query_id_dict = {v: k for k, v in query_id_dict_original.items()}
         # get the candidate trajectory IDs from top k
         pre_result = list(map(lambda x: x[0], topK))
         # build a map to save the result
@@ -89,9 +89,8 @@ def searchResult(k):
             i += 1
 
         finalResult = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[0:k]
-        with open("./data/result/query%s.txt" % index, 'w') as f:
-            for item in finalResult:
-                f.write("%s\n" % item)
+        with open("./data/result/query_%s.txt" % index, 'w') as f:
+            f.write('\n'.join('{} {}'.format(item[0], item[1]) for item in finalResult))
 
 
 if __name__ == "__main__":

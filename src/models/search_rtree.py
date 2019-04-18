@@ -1,17 +1,16 @@
 from __future__ import print_function
 import sys
-from pyspark.sql import SparkSession
+# from pyspark.sql import SparkSession
 from rtree.index import Rtree
 from src.features.build_bbox import *
 from pyspark import SparkContext, SparkConf
-import pickle
 
 
 def main(query_path, rtree_path):
 
     query = load_trajectory(query_path)
     qry_qgram, qry_id_list = build_qgram(query)
-    qry_id_dict = build_id_dict(qry_id_list)
+    qry_id_dict = build_id_dict(qry_id_list)  # key: query_id, value: query_key
     data_index = Rtree(rtree_path)
 
     conf = SparkConf().setAppName("PythonWordCount").setMaster("local")
