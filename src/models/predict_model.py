@@ -11,7 +11,7 @@ import numpy as np
 #
 # RDD: (test-key,Iter[(train_key,count),(train_key,count)])
 # change threshold
-threshold = 0.5
+threshold = 0.05
 qGramSize = 20
 
 def match(coor1,coor2):
@@ -37,56 +37,63 @@ def subcost(t1, t2):
 
 
 def searchResult(k):
+    # loading the files:
     with open("./data/processed/candidate_trajectory.txt", "rb") as f:
         candidateList = pickle.load(f)
-    print(candidateList[0][1][0:10])
-    topK = candidateList[0][1][0:k]
-    queryID = candidateList[0][0]
+    # candidateList => [[queryID_1,[(traID1, count1),(traID2, count2)]], [...]]
     with open("./data/processed/query_id_dict.txt", "rb") as f:
         query_id_dict = pickle.load(f)
     with open("./data/processed/rtree_id_dict2.txt", "rb") as f:
         rtree_id_dict = pickle.load(f)
     trajectory_dict = load_trajectory("./data/processed/gps_20161001_trajectory.txt")
     real_query_dict = load_trajectory("./data/processed/gps_20161002_query.txt")
-    query_id_dict = {v: k for k, v in query_id_dict.items()}
-    result = list(map(lambda x: x[0], topK))
-    #print(query_id_dict[queryID])
-    #print(queryID)
-    #print(trajectory_dict[rtree_id_dict[result[0]]])
+    for index in range(len(candidateList)):
+        # start to calculate:
+        topK = candidateList[index][1][0:k]
+        queryID = candidateList[index][0]
+        # reverse the query Dict: fakeID -> realID
+        query_id_dict = {v: k for k, v in query_id_dict.items()}
+        # get the candidate trajectory IDs from top k
+        pre_result = list(map(lambda x: x[0], topK))
+        # build a map to save the result
+        result_map = {}
+        for t in pre_result:
+             # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
+            result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_id_dict[t]]),np.array(real_query_dict[query_id_dict[queryID]]), "spherical")*max(len(trajectory_dict[rtree_id_dict[t]]),len(real_query_dict[query_id_dict[queryID]]))
+        #print(result_map)
+        fullCandidates = candidateList[index][1] # list of [ID, count]
+        i = k
+        query_tra = real_query_dict[query_id_dict[queryID]]
+        lengthQ = len(query_tra)
+        bestSoFar = result_map[topK[i-1][0]]
+        while i < len(fullCandidates):
+            candidate = fullCandidates[i]
+            candidateID = candidate[0]
+            try:
+                tra_s = trajectory_dict[rtree_id_dict[candidateID]]
+            # Mingxi: you can delete the "try except" part if you think there will no "miss match" in the dict anymore:
+            except KeyError:
+                pass
+            countValue = candidate[1]
+            lengthS = len(tra_s)
+            if countValue >= (max(lengthQ,lengthS) - (bestSoFar+1)*qGramSize):
+                # pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
+                # for s in pointedByCounts:
+                    realDist = tdist.edr(np.array(tra_s), np.array(query_tra), "spherical")*max(len(tra_s), len(query_tra))
+                    if realDist < bestSoFar:
+                        result_map[candidateID] = realDist
+                        # update the best so far:
+                        bestSoFar = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[k-1][1]
+            else:
+                break
+            i += 1
 
-    #print(real_query_dict[query_id_dict[queryID]])
-    result_map = {}
-    for t in result:
-         # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
-        result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_id_dict[t]]),np.array(real_query_dict[query_id_dict[queryID]]), "spherical")*max(len(trajectory_dict[rtree_id_dict[t]]),len(real_query_dict[query_id_dict[queryID]]))
-    #print(result_map)
-    fullCandidates = candidateList[0][1] # list of [ID, count]
-    i = k
-    query_tra = real_query_dict[query_id_dict[queryID]]
-    lengthQ = len(query_tra)
-    bestSoFar = result_map[topK[i-1][0]]
-    while i < len(fullCandidates):
-        candidate = fullCandidates[i]
-        try:
-            tra_s = trajectory_dict[rtree_id_dict[candidate[0]]]
-        except KeyError:
-            pass
-        countValue = candidate[1]
-        lengthS = len(tra_s)
-        if countValue >= (max(lengthQ,lengthS) - (bestSoFar+1)*qGramSize):
-            # pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
-            # for s in pointedByCounts:
-                realDist = tdist.edr(np.array(tra_s), np.array(query_tra), "spherical")*max(len(tra_s), len(query_tra))
-                print(realDist)
-                if(realDist<bestSoFar):
-                    result_map[candidate[0]] = realDist
-                    bestSoFar = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[k-1][1]
-        else:
-            break
-        i+=1
-
-    return sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[0:k]
+        finalResult = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[0:k]
+        with open("./data/result/query%s.txt" % index, 'w') as f:
+            for item in finalResult:
+                f.write("%s\n" % item)
 
 
 if __name__ == "__main__":
-    print(searchResult(7))
+    # param n means the number of results, (top n results)
+    searchResult(7)
