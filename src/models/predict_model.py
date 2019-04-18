@@ -42,17 +42,18 @@ def searchResult(k):
         candidateList = pickle.load(f)
     # candidateList => [[queryID_1,[(traID1, count1),(traID2, count2)]], [...]]
     with open("./data/processed/query_id_dict.txt", "rb") as f:
-        query_id_dict_original = pickle.load(f)
+        query_id_dict = pickle.load(f)
     with open("./data/processed/rtree_id_dict2.txt", "rb") as f:
         rtree_id_dict = pickle.load(f)
     trajectory_dict = load_trajectory("./data/processed/gps_20161001_trajectory.txt")
     real_query_dict = load_trajectory("./data/processed/gps_20161002_query.txt")
+    # reverse the query Dict: fakeID -> realID
+    query_id_dict = {v: k for k, v in query_id_dict.items()}
     for index in range(len(candidateList)):
         # start to calculate:
         topK = candidateList[index][1][0:k]
         queryID = candidateList[index][0]
-        # reverse the query Dict: fakeID -> realID
-        query_id_dict = {v: k for k, v in query_id_dict_original.items()}
+
         # get the candidate trajectory IDs from top k
         pre_result = list(map(lambda x: x[0], topK))
         # build a map to save the result
