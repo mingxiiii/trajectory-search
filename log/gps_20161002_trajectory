@@ -1,0 +1,6 @@
+2019-04-20 00:17:46,911 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 00:17:46,911 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 00:17:46,911 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161001_trajectory/my_rtree
+2019-04-20 00:17:49,077 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 00:19:47,302 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/candidate_trajectory.txt
+2019-04-20 00:19:47,303 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
