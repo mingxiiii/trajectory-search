@@ -1,24 +1,59 @@
 from os import path
 from src.features.build_bbox import *
 import sys
-
 sys.path.append(path.abspath('/Users/mingxidai/Documents/Master/traj-dist-master'))
 import traj_dist.distance as tdist
 import numpy as np
+import logging
+import os
+import gc
 
 
-def main(query_path, train_path, query_id_path, train_id_path):
+def main(query, train, query_num):
+    logger = logging.getLogger('build_truth')
+    logger.setLevel(logging.DEBUG)
+
+    fh = logging.FileHandler('./log/%s' % query)
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
+    logger.info('---------------------------- Search for ground truth ----------------------------')
+
+    query_path = './data/processed/%s.txt' % query
+    train_path = './data/processed/%s.txt' % train
+    query_id_dict_path = './data/interim/%s/%s/query_id_dict.txt' % (query, train)
+    rtree_id_dict_path = './data/interim/%s/rtree_id_dict.txt' % train
+    result_path = './data/truth/%s/%s' % (query, train)
+    if not os.path.exists(result_path):
+        os.makedirs(result_path)
+
+    query_id_dict = read_pickle(query_id_dict_path)  # fakeID -> readID
+    logger.info('Load query id dictionary: %s' % query_id_dict_path)
+
+    train_id_dict = read_pickle(rtree_id_dict_path)
+    logger.info('Load train id dictionary: %s' % rtree_id_dict_path)
+
+    query_data = load_trajectory(query_path, n=query_num)
+    logger.info('Load %d query trajectory: %s' % (query_num, query_path))
+
     train_data = load_trajectory(train_path)  # realID -> vectors
-    query_data = load_trajectory(query_path)
-    query_id_dict = read_pickle(query_id_path)  # fakeID -> readID
-    train_id_dict = read_pickle(train_id_path)
+    logger.info('Load train trajectory: %s' % train_path)
+
     train_id_dict = {v: k for k, v in train_id_dict.items()}
     # print(train_id_dict)
-
-    result = []
+    # result = []
     for query_id, query_trajectory in query_data.items():
         query_key = query_id_dict[query_id]
-        print(query_key)
+        # print(query_key)
         distance_list = []
         train_key_list = []
         for train_id, train_trajectory in train_data.items():
@@ -33,17 +68,16 @@ def main(query_path, train_path, query_id_path, train_id_path):
         distance_list_sorted = [distance_list[i] for i in ix]
         train_key_sorted = [train_key_list[i] for i in ix]
         trajectory_result = [(e1, e2) for e1, e2 in zip(train_key_sorted, distance_list_sorted)]
-        result.append([query_key, trajectory_result])
-    return result
+        with open(result_path + "/query_%s.txt" % query_key, 'w') as f:
+            f.write('\n'.join('{} {}'.format(item[0], item[1]) for item in trajectory_result))
+        f.close()
+        gc.collect()
+        # result.append([query_key, trajectory_result])
+    # return result
 
 
 if __name__ == '__main__':
-    print(len(sys.argv))
-    if len(sys.argv) != 5:
-        # print("Usage: query trajectory <file>, train trajectory <file>, query id dictionary <file>, train id dictionary <file>", file=sys.stderr)
-        sys.exit(-1)
-    query = sys.argv[1]
-    train = sys.argv[2]
-    query_id = sys.argv[3]
-    train_id = sys.argv[4]
-    main(query_path=query, train_path=train, query_id_path=query_id, train_id_path=train_id)
+    query_trajectory = sys.argv[1]
+    train_trajectory = sys.argv[2]
+    n = int(sys.argv[3])
+    main(query=query_trajectory, train=train_trajectory, query_num=n)

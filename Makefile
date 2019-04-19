@@ -9,13 +9,11 @@ BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = trajectory-search
 PYTHON_INTERPRETER = python
-QUERY_ROW_DATA='./data/raw/gps_20161002'
-QUERY_PROCESSED_DATA='./data/processed/gps_20161002_query.txt'
-QUERY_DATA='./data/external/gps_20161002_query.txt'
-RTREE_PATH='./data/processed/my_rtree'
-RTREE_ID_DICT='./data/processed/rtree_id_dict.txt'
-RTREE_ID_DICT2='./data/processed/rtree_id_dict2.txt'
-QUERY_ID_DICT='./data/processed/query_id_dict.txt'
+QUERY_ROW_DATA='gps_20161002'
+QUERY_PROCESSED_DATA='gps_20161002_trajectory'
+TRAIN_PROCESSED_DATA='gps_20161001_trajectory'
+QUERY_NUM=1
+TOPK=10
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -41,15 +39,15 @@ query:
 
 ## Search rtree
 search:
-	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_DATA) $(RTREE_PATH)
+	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
 
 ## Search top-k
 prediction:
-	$(PYTHON_INTERPRETER) src/models/predict_model.py
+	$(PYTHON_INTERPRETER) src/models/predict_model.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM) $(TOPK)
 
 ## Make truth
 truth:
-	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_DATA) $(PROCESSED_DATA) $(QUERY_ID_DICT) $(RTREE_ID_DICT2)
+	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
 
 
 ## Delete all compiled Python files
