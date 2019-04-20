@@ -20,7 +20,7 @@ def load_trajectory(trajectory_path, n=None, pruning=False):
 
             #dictionary -  key: order_id, value: array of (x,y) coordinates for all timestamps, timestamp info not saved
             if pruning:
-                if len(values) >= 40 and len(values) <= 500:  # remove too short/ too long trajectories
+                if len(values) >= 50 and len(values) <= 400:  # remove too short/ too long trajectories
                     count += 1
                     trajectory[order_id] = values
             else:
@@ -33,7 +33,7 @@ def load_trajectory(trajectory_path, n=None, pruning=False):
     return trajectory
 
 
-def build_qgram(data, k=20):
+def build_qgram(data, k=10):
     order_id_list = []
     qgram = {}
     for order_id, values in data.items():
@@ -67,13 +67,16 @@ def build_order_dict(id_list):
 
 
 def read_pickle(path):
-    print(path)
-    with open(path, 'rb') as openfile:
-        while True:
-            try:
-                objects = pickle.load(openfile)
-            except EOFError:
-                break
+    # print(path)
+    try:
+        with open(path, 'rb') as openfile:
+            objects = pickle.load(openfile)
+    except UnicodeDecodeError:
+        with open(path, 'rb') as openfile:
+            objects = pickle.load(openfile, encoding="latin1")
+    except Exception as e:
+        print(e)
+        raise
     openfile.close()
     return objects
 
@@ -84,3 +87,27 @@ def save_pickle(obj, path):
     openfile.close()
     return True
 
+
+def build_coordinate(traj_id, traj_data):
+    try:
+        data = traj_data[traj_id]  # list of tuples
+    except KeyError:
+        return None
+    x = []
+    y = []
+    for t in data:
+        x.append(t[1])
+        y.append(t[0])
+    return x, y
+
+
+def load_top_k(file_path, k):
+    f = open(file=file_path)
+    id = next(f)
+    top_k = []
+    for i in range(k):
+        row = next(f)
+        row = row.strip()
+        row = row.split(' ')
+        top_k.append(int(row[0]))
+    return top_k

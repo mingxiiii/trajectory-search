@@ -94,7 +94,8 @@ def searchResult(query, train, query_num, user_k):
         topK = candidateList[index][1][0:k]
         queryID = candidateList[index][0]
         pre_result = list(map(lambda x: x[0], topK))  # get the candidate trajectory IDs from top k
-        print(pre_result)
+        # print(queryID)
+        # print(pre_result)
         result_map = {}  # build a map to save the result
         for t in pre_result:
              # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
