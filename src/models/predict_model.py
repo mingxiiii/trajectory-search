@@ -5,7 +5,7 @@ sys.path.append(path.abspath('/Users/mingxidai/Documents/Master/traj-dist-master
 import pickle
 import time
 import traj_dist.distance as tdist
-from src.features.build_bbox import load_trajectory
+from src.features.helper import load_trajectory
 import numpy as np
 import logging
 import sys
@@ -90,6 +90,7 @@ def searchResult(query, train, query_num, user_k):
 
     logger.info('Start finding top K')
     for index in range(len(candidateList)):  # start to calculate
+        print(index)
         k = min(user_k, len(candidateList[index][1]))
         topK = candidateList[index][1][0:k]
         queryID = candidateList[index][0]

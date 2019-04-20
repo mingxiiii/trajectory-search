@@ -9,8 +9,9 @@ BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = trajectory-search
 PYTHON_INTERPRETER = python
-QUERY_ROW_DATA='gps_20161002'
+QUERY_ROW_DATA='gps_20161003'
 QUERY_PROCESSED_DATA='gps_20161003_trajectory'
+TRAIN_ROW_DATA='gps_20161002'
 TRAIN_PROCESSED_DATA='gps_20161002_trajectory'
 QUERY_NUM=50
 TOPK=50
@@ -33,9 +34,13 @@ requirements: test_environment
 setup:
 	export PYSPARK_SUBMIT_ARGS="--master local[2] pyspark-shell";
 
-## Make Dataset
-query:
-	$(PYTHON_INTERPRETER) src/data/make_trajectory.py $(QUERY_ROW_DATA) $(QUERY_PROCESSED_DATA)
+## Pre-process Dataset
+data:
+	$(PYTHON_INTERPRETER) src/data/make_trajectory.py $(TRAIN_ROW_DATA) $(TRAIN_PROCESSED_DATA)
+
+## build R-tree
+tree:
+	$(PYTHON_INTERPRETER) src/features/build_rtree.py $(TRAIN_PROCESSED_DATA)
 
 ## Search rtree
 search:
@@ -51,8 +56,10 @@ truth:
 
 ## ALL
 all:
+	$(PYTHON_INTERPRETER) src/data/make_trajectory.py $(TRAIN_ROW_DATA) $(TRAIN_PROCESSED_DATA)
+	$(PYTHON_INTERPRETER) src/features/build_rtree.py $(TRAIN_PROCESSED_DATA)
+	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
 	$(PYTHON_INTERPRETER) src/models/predict_model.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM) $(TOPK)
-	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
 
 
 ## Delete all compiled Python files

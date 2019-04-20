@@ -2,7 +2,7 @@ from __future__ import print_function
 import sys
 # from pyspark.sql import SparkSession
 from rtree.index import Rtree
-from src.features.build_bbox import *
+from src.features.helper import *
 from pyspark import SparkContext, SparkConf
 import logging
 import os

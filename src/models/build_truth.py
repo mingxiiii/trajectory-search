@@ -1,5 +1,5 @@
 from os import path
-from src.features.build_bbox import *
+from src.features.helper import *
 import sys
 sys.path.append(path.abspath('/Users/mingxidai/Documents/Master/traj-dist-master'))
 import traj_dist.distance as tdist

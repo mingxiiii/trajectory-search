@@ -11,7 +11,7 @@ Project Organization
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
+    │   ├── interim        <- Intermediate data containing candidate trajectory ID and rtree files.
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
     │
@@ -19,9 +19,9 @@ Project Organization
     │
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks          <- Jupyter notebooks for visualizing trajectories and compute performance statistics. 
+    │   ├── pruning_power.py
+    │   └── trajectory_viz.py
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
@@ -35,20 +35,22 @@ Project Organization
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
+    │   ├── data           <- Scripts to process raw data
+    │   │   └── make_trajectory.py
     │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_rtree.py
+    │   ├── features       <- Scripts to build rtree
+    │   │   ├── build_rtree.py
     │   │   └── build_bbox.py
     │   │
-    │   ├── models         <- Scripts to search rtrees and then use EDR to compute top k
+    │   ├── models         <- Scripts to search rtrees and then use EDR to compute top-k
     │   │   │                 trajectories
+    │   │   │              <- Script to sequential scan all trajectories and find top-k
     │   │   ├── predict_model.py
-    │   │   └── search_rtree.py
+    │   │   ├── search_rtree.py
+    │   │   └── build_truth.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │   └── statistics     <- Scripts to compute top k accuracy of result
+    │       └── topkAccuracy.py
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
 
