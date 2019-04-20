@@ -4,13 +4,13 @@ from sklearn import preprocessing
 import pickle
 
 
-def load_trajectory(trajectory_path, n=None):
+def load_trajectory(trajectory_path, n=None, pruning=False):
     trajectory = {}
     with io.open(trajectory_path, buffering=io.DEFAULT_BUFFER_SIZE) as f:
         content = f.readlines()
         count = 0
         for line in content:
-            count += 1
+
             pair = line.split()
             order_id = pair[0]
             values = pair[1]
@@ -19,8 +19,14 @@ def load_trajectory(trajectory_path, n=None):
             values = [(float(x), float(y)) for (x,y) in values]
 
             #dictionary -  key: order_id, value: array of (x,y) coordinates for all timestamps, timestamp info not saved
-            # if len(values) >= 50 and len(values) <= 400:
-            trajectory[order_id] = values
+            if pruning:
+                if len(values) >= 40 and len(values) <= 500:  # remove too short/ too long trajectories
+                    count += 1
+                    trajectory[order_id] = values
+            else:
+                count += 1
+                trajectory[order_id] = values
+
             if n is not None:
                 if count%n == 0:
                     break

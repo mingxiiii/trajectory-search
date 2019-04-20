@@ -10,8 +10,8 @@ PROFILE = default
 PROJECT_NAME = trajectory-search
 PYTHON_INTERPRETER = python
 QUERY_ROW_DATA='gps_20161002'
-QUERY_PROCESSED_DATA='gps_20161002_trajectory'
-TRAIN_PROCESSED_DATA='gps_20161001_trajectory'
+QUERY_PROCESSED_DATA='gps_20161003_trajectory'
+TRAIN_PROCESSED_DATA='gps_20161002_trajectory'
 QUERY_NUM=50
 TOPK=50
 
@@ -47,6 +47,11 @@ prediction:
 
 ## Make truth
 truth:
+	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
+
+## ALL
+all:
+	$(PYTHON_INTERPRETER) src/models/predict_model.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM) $(TOPK)
 	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
 
 

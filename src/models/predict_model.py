@@ -41,7 +41,7 @@ def subcost(t1, t2):
         return 0
 
 
-def searchResult(query, train, query_num, k):
+def searchResult(query, train, query_num, user_k):
     logger = logging.getLogger('predict')
     logger.setLevel(logging.DEBUG)
 
@@ -90,9 +90,11 @@ def searchResult(query, train, query_num, k):
 
     logger.info('Start finding top K')
     for index in range(len(candidateList)):  # start to calculate
+        k = min(user_k, len(candidateList[index][1]))
         topK = candidateList[index][1][0:k]
         queryID = candidateList[index][0]
         pre_result = list(map(lambda x: x[0], topK))  # get the candidate trajectory IDs from top k
+        print(pre_result)
         result_map = {}  # build a map to save the result
         for t in pre_result:
              # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
@@ -124,7 +126,8 @@ def searchResult(query, train, query_num, k):
                 break
             i += 1
         finalResult = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[0:k]
-        with open(result_path + "/query_%s.txt" % index, 'w') as f:
+        with open(result_path + "/query_%s.txt" % queryID, 'w') as f:
+            f.write(query_id_dict[queryID] + '\n')
             f.write('\n'.join('{} {}'.format(item[0], item[1]) for item in finalResult))
         f.close()
         gc.collect()
@@ -136,4 +139,4 @@ if __name__ == "__main__":
     train_trajectory = sys.argv[2]
     n = int(sys.argv[3])
     top_k = int(sys.argv[4])
-    searchResult(query=query_trajectory, train=train_trajectory, query_num=n, k=top_k)
+    searchResult(query=query_trajectory, train=train_trajectory, query_num=n, user_k=top_k)

@@ -4,3 +4,34 @@
 2019-04-20 00:17:49,077 - search_rtree - INFO - Load 50 query trajectories
 2019-04-20 00:19:47,302 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/candidate_trajectory.txt
 2019-04-20 00:19:47,303 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
+2019-04-20 01:51:32,916 - build_truth - INFO - ---------------------------- Search for ground truth ----------------------------
+2019-04-20 01:51:32,919 - build_truth - INFO - Load query id dictionary: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
+2019-04-20 01:51:35,532 - build_truth - INFO - Load train id dictionary: ./data/interim/gps_20161001_trajectory/rtree_id_dict.txt
+2019-04-20 01:51:38,820 - build_truth - INFO - Load 1 query trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 01:55:07,252 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 01:55:07,252 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 01:55:07,252 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161001_trajectory/my_rtree
+2019-04-20 01:55:27,197 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 01:55:27,198 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 01:55:27,198 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161001_trajectory/my_rtree
+2019-04-20 01:55:28,453 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 01:57:20,726 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/candidate_trajectory.txt
+2019-04-20 01:57:20,727 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
+2019-04-20 01:57:42,339 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 01:57:44,684 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/candidate_trajectory.txt
+2019-04-20 01:57:44,687 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
+2019-04-20 01:57:47,313 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161001_trajectory/rtree_id_dict.txt
+2019-04-20 01:59:53,183 - predict - INFO - Load train trajectory: ./data/processed/gps_20161001_trajectory.txt
+2019-04-20 01:59:56,860 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 01:59:56,879 - predict - INFO - Start finding top K
+2019-04-20 02:12:34,019 - predict - INFO - Finished
+2019-04-20 02:12:38,757 - build_truth - INFO - ---------------------------- Search for ground truth ----------------------------
+2019-04-20 02:12:38,762 - build_truth - INFO - Load query id dictionary: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
+2019-04-20 02:12:41,430 - build_truth - INFO - Load train id dictionary: ./data/interim/gps_20161001_trajectory/rtree_id_dict.txt
+2019-04-20 02:12:44,336 - build_truth - INFO - Load 50 query trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 02:14:36,137 - build_truth - INFO - Load train trajectory: ./data/processed/gps_20161001_trajectory.txt
+2019-04-20 10:51:46,956 - build_truth - INFO - ---------------------------- Search for ground truth ----------------------------
+2019-04-20 10:51:46,962 - build_truth - INFO - Load query id dictionary: ./data/interim/gps_20161002_trajectory/gps_20161001_trajectory/query_id_dict.txt
+2019-04-20 10:51:49,653 - build_truth - INFO - Load train id dictionary: ./data/interim/gps_20161001_trajectory/rtree_id_dict.txt
+2019-04-20 10:51:53,480 - build_truth - INFO - Load 50 query trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 10:53:48,189 - build_truth - INFO - Load train trajectory: ./data/processed/gps_20161001_trajectory.txt
