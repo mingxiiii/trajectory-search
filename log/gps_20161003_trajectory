@@ -35,3 +35,105 @@
 2019-04-20 12:43:57,821 - build_truth - INFO - Load train id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
 2019-04-20 12:44:01,645 - build_truth - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
 2019-04-20 12:44:56,841 - build_truth - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 13:15:05,519 - build_truth - INFO - ---------------------------- Search for ground truth ----------------------------
+2019-04-20 13:15:05,525 - build_truth - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 13:15:24,294 - build_truth - INFO - Load train id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 13:15:33,761 - build_truth - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 13:17:05,425 - build_truth - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 20:17:59,351 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 20:17:59,352 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:17:59,352 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 20:18:02,024 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 20:19:08,933 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 20:19:08,933 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:19:08,933 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 20:19:11,155 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 20:31:03,062 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 20:31:03,063 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:31:03,063 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 20:31:06,400 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 20:37:23,734 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 20:37:23,735 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:37:23,735 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 20:37:25,431 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 20:37:38,196 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 20:37:38,197 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 20:40:02,562 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 20:40:02,563 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:40:02,563 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 20:40:11,789 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 20:40:11,789 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:40:11,790 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 20:40:15,893 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 20:42:46,412 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 20:42:46,416 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 20:42:59,382 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 20:43:04,189 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 20:43:04,192 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 20:44:51,925 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 20:44:56,043 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 20:44:56,056 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 20:45:01,039 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 20:46:17,192 - predict - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 20:46:22,413 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:46:22,413 - predict - INFO - Start finding top K
+2019-04-20 20:51:30,595 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 20:51:33,457 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 20:51:33,468 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 20:51:36,225 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 20:52:47,002 - predict - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 20:52:50,840 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 20:52:50,845 - predict - INFO - Start finding top K
+2019-04-20 21:00:05,563 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 21:00:05,563 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 21:00:05,564 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 21:00:06,981 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 21:01:53,540 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 21:01:53,540 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 21:02:46,579 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 21:02:49,219 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 21:02:49,221 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 21:02:51,799 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 21:03:53,749 - predict - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 21:03:57,232 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 21:03:57,241 - predict - INFO - Start finding top K
+2019-04-20 21:09:48,038 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 21:09:48,038 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 21:09:48,039 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 21:09:49,687 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 21:11:29,600 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 21:11:29,600 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 21:11:48,730 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 21:11:51,163 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 21:11:51,165 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 21:11:54,015 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 21:13:04,510 - predict - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 21:13:08,275 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 21:13:08,276 - predict - INFO - Start finding top K
+2019-04-20 21:32:56,901 - predict - INFO - Finished
+2019-04-20 21:40:58,217 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 21:40:58,217 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 21:40:58,218 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 21:41:01,406 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 21:42:59,172 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 21:42:59,173 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 21:43:41,653 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 21:43:45,264 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 21:43:45,268 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 21:43:49,101 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 21:45:13,451 - predict - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 21:45:17,965 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 21:45:17,966 - predict - INFO - Start finding top K
+2019-04-20 22:02:03,326 - search_rtree - INFO - Calculate common Q-grams for query trajectories
+2019-04-20 22:02:03,327 - search_rtree - INFO - Query trajectory path: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 22:02:03,327 - search_rtree - INFO - Rtree path: ./data/interim/gps_20161002_trajectory/my_rtree
+2019-04-20 22:02:04,992 - search_rtree - INFO - Load 50 query trajectories
+2019-04-20 22:03:49,707 - search_rtree - INFO - Output candidate_trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 22:03:49,707 - search_rtree - INFO - Output query_id_dict: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 22:05:03,442 - predict - INFO - ---------------------------- Predict the top-k similar trajectories ----------------------------
+2019-04-20 22:05:06,053 - predict - INFO - Load candidate trajectory: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/candidate_trajectory.txt
+2019-04-20 22:05:06,064 - predict - INFO - Load query id dictionary: ./data/interim/gps_20161003_trajectory/gps_20161002_trajectory/query_id_dict.txt
+2019-04-20 22:05:09,043 - predict - INFO - Load rtree id dictionary: ./data/interim/gps_20161002_trajectory/rtree_id_dict.txt
+2019-04-20 22:06:34,384 - predict - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-20 22:06:38,943 - predict - INFO - Load 50 query trajectory: ./data/processed/gps_20161003_trajectory.txt
+2019-04-20 22:06:38,943 - predict - INFO - Start finding top K
