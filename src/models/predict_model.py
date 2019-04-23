@@ -11,37 +11,14 @@ import logging
 import sys
 import os
 import gc
+from src.features.helper import swap_k_v, read_pickle
 
 #
 # RDD: (test-key,Iter[(train_key,count),(train_key,count)])
 # change threshold
-threshold = 0.05
-qGramSize = 20
 
 
-def match(coor1, coor2):
-    return abs(coor1[0]-coor2[0]) <= threshold and abs(coor1[1]-coor2[1]) <= threshold
-
-
-def calculateEdr(trajectory1, trajectory2):
-    if len(trajectory1) == 0:
-        return len(trajectory2)
-    elif len(trajectory2) == 0:
-        return len(trajectory1)
-    else:
-        return min(calculateEdr(trajectory1[1:], trajectory2[1:]) + subcost(trajectory1[0], trajectory2[0]),
-                   calculateEdr(trajectory1[1:], trajectory2)+1,
-                   calculateEdr(trajectory1, trajectory2[1:])+1)
-
-
-def subcost(t1, t2):
-    if match(t1, t2):
-        return 1
-    else:
-        return 0
-
-
-def searchResult(query, train, query_num, user_k):
+def searchResult(query, train, query_num, user_k, qgram_size):
     logger = logging.getLogger('predict')
     logger.setLevel(logging.DEBUG)
 
@@ -60,25 +37,23 @@ def searchResult(query, train, query_num, user_k):
 
     # loading the files:
     logger.info('---------------------------- Predict the top-k similar trajectories ----------------------------')
+    qgram_tag = 'q_%d' % qgram_size
     query_path = './data/processed/%s.txt' % query
     train_path = './data/processed/%s.txt' % train
-    candidate_traj_path = './data/interim/%s/%s/candidate_trajectory.txt' % (query, train)
-    query_id_dict_path = './data/interim/%s/%s/query_id_dict.txt' % (query, train)
-    rtree_id_dict_path = './data/interim/%s/rtree_id_dict.txt' % train
-    result_path = './data/result/%s/%s' % (query, train)
+    candidate_traj_path = './data/interim/%s/%s/candidate_trajectory_%s.txt' % (query, train, qgram_tag)
+    query_id_dict_path = './data/interim/%s/%s/query_id_dict_%s.txt' % (query, train, qgram_tag)
+    rtree_id_dict_path = './data/interim/%s/rtree_id_dict_%s.txt' % (train, qgram_tag)
+    result_path = './data/result/%s/%s/%s/' % (query, train, qgram_tag)
     if not os.path.exists(result_path):
         os.makedirs(result_path)
 
-    with open(candidate_traj_path, "rb") as f:
-        candidateList = pickle.load(f) # candidateList => [[queryID_1,[(traID1, count1),(traID2, count2)]], [...]]
+    candidateList = read_pickle(candidate_traj_path)  # candidateList => [[queryID_1,[(traID1, count1),(traID2, count2)]], [...]]
     logger.info('Load candidate trajectory: %s' % candidate_traj_path)
 
-    with open(query_id_dict_path, "rb") as f:
-        query_id_dict = pickle.load(f)
+    query_id_to_key = read_pickle(query_id_dict_path)
     logger.info('Load query id dictionary: %s' % query_id_dict_path)
 
-    with open(rtree_id_dict_path, "rb") as f:
-        rtree_id_dict = pickle.load(f)
+    rtree_id_to_key = read_pickle(rtree_id_dict_path)
     logger.info('Load rtree id dictionary: %s' % rtree_id_dict_path)
 
     trajectory_dict = load_trajectory(train_path)
@@ -86,7 +61,9 @@ def searchResult(query, train, query_num, user_k):
 
     real_query_dict = load_trajectory(query_path, n=query_num)
     logger.info('Load %d query trajectory: %s' % (query_num, query_path))
-    query_id_dict = {v: k for k, v in query_id_dict.items()}  # reverse the query Dict: fakeID -> realID
+
+    query_key_to_id = swap_k_v(query_id_to_key)  # key: encoded key; value: trajectory id in string
+    rtree_key_to_id = swap_k_v(rtree_id_to_key)  # key: encoded key; value: trajectory id in string
 
     logger.info('Start finding top K')
     for index in range(len(candidateList)):  # start to calculate
@@ -100,24 +77,24 @@ def searchResult(query, train, query_num, user_k):
         result_map = {}  # build a map to save the result
         for t in pre_result:
              # result_map[t] = calculateEdr(trajectory_dict[rtree_id_dict[t]], real_query_dict[query_id_dict[queryID]])
-            result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_id_dict[t]]),np.array(real_query_dict[query_id_dict[queryID]]), "spherical")*max(len(trajectory_dict[rtree_id_dict[t]]),len(real_query_dict[query_id_dict[queryID]]))
+            result_map[t] = tdist.edr(np.array(trajectory_dict[rtree_key_to_id[t]]), np.array(real_query_dict[query_key_to_id[queryID]]), "spherical")*max(len(trajectory_dict[rtree_key_to_id[t]]),len(real_query_dict[query_key_to_id[queryID]]))
         # print(result_map)
         fullCandidates = candidateList[index][1]  # list of [ID, count]
         i = k
-        query_tra = real_query_dict[query_id_dict[queryID]]
+        query_tra = real_query_dict[query_key_to_id[queryID]]
         lengthQ = len(query_tra)
         bestSoFar = result_map[topK[i-1][0]]
         while i < len(fullCandidates):
             candidate = fullCandidates[i]
             candidateID = candidate[0]
-            try:
-                tra_s = trajectory_dict[rtree_id_dict[candidateID]]
+            # try:
+            tra_s = trajectory_dict[rtree_key_to_id[candidateID]]
             # Mingxi: you can delete the "try except" part if you think there will no "miss match" in the dict anymore:
-            except KeyError:
-                pass
+            # except KeyError:
+            #     pass
             countValue = candidate[1]
             lengthS = len(tra_s)
-            if countValue >= (max(lengthQ,lengthS) - (bestSoFar+1)*qGramSize):
+            if countValue >= (max(lengthQ, lengthS) - (bestSoFar+1)*qgram_size):
                 # pointedByCounts = filter(lambda e:e[1]==countValue, fullCandidates)
                 # for s in pointedByCounts:
                     realDist = tdist.edr(np.array(tra_s), np.array(query_tra), "spherical")*max(len(tra_s), len(query_tra))
@@ -129,7 +106,7 @@ def searchResult(query, train, query_num, user_k):
             i += 1
         finalResult = sorted(result_map.items(), key=lambda kv: (kv[1], kv[0]))[0:k]
         with open(result_path + "/query_%s.txt" % queryID, 'w') as f:
-            f.write(query_id_dict[queryID] + '\n')
+            f.write(query_key_to_id[queryID] + '\n')
             f.write('\n'.join('{} {}'.format(item[0], item[1]) for item in finalResult))
         f.close()
         gc.collect()
@@ -139,6 +116,7 @@ def searchResult(query, train, query_num, user_k):
 if __name__ == "__main__":
     query_trajectory = sys.argv[1]
     train_trajectory = sys.argv[2]
-    n = int(sys.argv[3])
+    query_n = int(sys.argv[3])
     top_k = int(sys.argv[4])
-    searchResult(query=query_trajectory, train=train_trajectory, query_num=n, user_k=top_k)
+    qgram_n = int(sys.argv[5])
+    searchResult(query=query_trajectory, train=train_trajectory, query_num=query_n, user_k=top_k, qgram_size=qgram_n)

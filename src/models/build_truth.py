@@ -53,26 +53,27 @@ def main(query, train, query_num):
     # result = []
     for query_id, query_trajectory in query_data.items():
         query_key = query_id_dict[query_id]
-        print(query_key)
-        distance_list = []
-        train_key_list = []
-        for train_id, train_trajectory in train_data.items():
-            try:
-                train_key = train_id_dict[train_id]
-                distance = tdist.edr(np.array(train_trajectory), np.array(query_trajectory), "spherical")*max(len(train_trajectory),len(query_trajectory))
-                distance_list.append(distance)
-                train_key_list.append(train_key)
-            except KeyError:
-                pass
-        ix = sorted(range(len(distance_list)), key=lambda k: distance_list[k])
-        distance_list_sorted = [distance_list[i] for i in ix]
-        train_key_sorted = [train_key_list[i] for i in ix]
-        trajectory_result = [(e1, e2) for e1, e2 in zip(train_key_sorted, distance_list_sorted)]
-        with open(result_path + "/query_%s.txt" % query_key, 'w') as f:
-            f.write(query_id + '\n')
-            f.write('\n'.join('{} {}'.format(item[0], item[1]) for item in trajectory_result))
-        f.close()
-        gc.collect()
+        if query_key in [36, 41]:
+            print(query_key)
+            distance_list = []
+            train_key_list = []
+            for train_id, train_trajectory in train_data.items():
+                try:
+                    train_key = train_id_dict[train_id]
+                    distance = tdist.edr(np.array(train_trajectory), np.array(query_trajectory), "spherical")*max(len(train_trajectory),len(query_trajectory))
+                    distance_list.append(distance)
+                    train_key_list.append(train_key)
+                except KeyError:
+                    pass
+            ix = sorted(range(len(distance_list)), key=lambda k: distance_list[k])
+            distance_list_sorted = [distance_list[i] for i in ix]
+            train_key_sorted = [train_key_list[i] for i in ix]
+            trajectory_result = [(e1, e2) for e1, e2 in zip(train_key_sorted, distance_list_sorted)]
+            with open(result_path + "/query_%s.txt" % query_key, 'w') as f:
+                f.write(query_id + '\n')
+                f.write('\n'.join('{} {}'.format(item[0], item[1]) for item in trajectory_result))
+            f.close()
+            gc.collect()
     # result.append([query_key, trajectory_result])
     logger.info('Finished building ground truth')
     return

@@ -14,6 +14,7 @@ QUERY_PROCESSED_DATA='gps_20161003_trajectory'
 TRAIN_ROW_DATA='gps_20161002'
 TRAIN_PROCESSED_DATA='gps_20161002_trajectory'
 QUERY_NUM=50
+QGRAM_SIZE=20
 TOPK=50
 
 ifeq (,$(shell which conda))
@@ -40,19 +41,23 @@ data:
 
 ## build R-tree
 tree:
-	$(PYTHON_INTERPRETER) src/features/build_rtree.py $(TRAIN_PROCESSED_DATA)
+	$(PYTHON_INTERPRETER) src/features/build_rtree.py $(TRAIN_PROCESSED_DATA) $(QGRAM_SIZE)
 
 ## Search rtree
 search:
-	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
+	$(PYTHON_INTERPRETER) src/models/search_rtree.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM) $(QGRAM_SIZE)
 
 ## Search top-k
 prediction:
-	$(PYTHON_INTERPRETER) src/models/predict_model.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM) $(TOPK)
+	$(PYTHON_INTERPRETER) src/models/predict_model.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM) $(TOPK) $(QGRAM_SIZE)
 
 ## Make truth
 truth:
 	$(PYTHON_INTERPRETER) src/models/build_truth.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QUERY_NUM)
+
+## Calculate top-k accuracy
+stats:
+	$(PYTHON_INTERPRETER) src/statistics/topkAccuracy.py $(QUERY_PROCESSED_DATA) $(TRAIN_PROCESSED_DATA) $(QGRAM_SIZE) $(TOPK)
 
 ## ALL
 all:
