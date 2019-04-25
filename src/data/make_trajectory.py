@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
-import click
 import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
 import io
 import re
 import sys
 
 
-def main(input_filepath, output_filepath, n=50):
+def main(raw_data, processed_data):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
-    logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    logger = logging.getLogger('make_trajectory')
+    logger.setLevel(logging.DEBUG)
 
+    fh = logging.FileHandler('./log/%s' % raw_data)
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
+    input_filepath = './data/raw/%s.txt' % raw_data
+    output_filepath = './data/processed/%s.txt' % processed_data
+
+    logger.info('---------------------------- Making trajectory sequence from raw data ----------------------------')
+    logger.info('Load raw data from: %s' % input_filepath)
     f = io.open(input_filepath, 'r', encoding="utf8", buffering=io.DEFAULT_BUFFER_SIZE)
     data = {}
     counter = 0
@@ -34,10 +49,10 @@ def main(input_filepath, output_filepath, n=50):
             data[orderId].append(val)
         # if counter % 5000 == 0:
         #     break
-
+    logger.info('Write trajectory sequence to: %s' % output_filepath)
     f = io.open(output_filepath, 'w', encoding="utf8", buffering=io.DEFAULT_BUFFER_SIZE)
     for key, val in data.items():
-        if len(val) >= 50 and len(val) <= 400:
+        if len(val) >= 50 and len(val) <= 400:  # excluding too long and too short trajectories
             f.write(key + '\t')
             time_stamp = [int(e[0]) for e in val]
             time_stamp_len = len(time_stamp)
@@ -47,22 +62,12 @@ def main(input_filepath, output_filepath, n=50):
                 f.write(':'.join(item) + ',')
             f.write('\r\n')
     f.close()
+    logger.info('Finished')
 
 
 if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
-
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
-    f_in = sys.argv[1]
-    f_out = sys.argv[2]
-
-    main(f_in, f_out)
+    d_in = sys.argv[1]
+    d_out = sys.argv[2]
+    main(d_in, d_out)
 
 

@@ -62,7 +62,9 @@ def main(train, qgram_size):
         #    1. node id
         #    2. bounding box(point): (x,y,x,y)
         #    3. data inside each node: trajectory's key from order_dict
-            data_idx.insert(node_id, (qgram[0], qgram[1], qgram[0], qgram[1]), obj=(id_to_key_dict[key]))
+            x = np.around(qgram[0], decimals=5)
+            y = np.around(qgram[1], decimals=5)
+            data_idx.insert(node_id, (x, y, x, y), obj=(id_to_key_dict[key]))
             node_id += 1
 
     del data_idx
@@ -73,5 +75,5 @@ def main(train, qgram_size):
 
 if __name__ == '__main__':
     train_data = sys.argv[1]
-    q_size = sys.argv[2]
+    q_size = int(sys.argv[2])
     main(train_data, q_size)

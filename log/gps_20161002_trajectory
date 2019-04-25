@@ -35,3 +35,18 @@
 2019-04-20 10:51:49,653 - build_truth - INFO - Load train id dictionary: ./data/interim/gps_20161001_trajectory/rtree_id_dict.txt
 2019-04-20 10:51:53,480 - build_truth - INFO - Load 50 query trajectory: ./data/processed/gps_20161002_trajectory.txt
 2019-04-20 10:53:48,189 - build_truth - INFO - Load train trajectory: ./data/processed/gps_20161001_trajectory.txt
+2019-04-23 20:21:36,610 - build_rtree - INFO - ---------------------------- Build R-tree ----------------------------
+2019-04-23 20:22:25,630 - build_rtree - INFO - ---------------------------- Build R-tree ----------------------------
+2019-04-23 20:23:13,591 - build_rtree - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-23 21:23:48,669 - build_rtree - INFO - ---------------------------- Build R-tree ----------------------------
+2019-04-23 21:24:37,655 - build_rtree - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-23 21:37:23,272 - build_rtree - INFO - Output rtree_id_dict: ./data/interim/gps_20161002_trajectory/rtree_id_dict_q_5.txt
+2019-04-23 21:37:23,498 - build_rtree - INFO - Output R-tree: ./data/interim/gps_20161002_trajectory/my_rtree_q_5
+2019-04-24 00:29:29,072 - build_rtree - INFO - exec time: 10325.57213306427
+2019-04-24 00:29:29,074 - build_rtree - INFO - Finished building R-tree
+2019-04-24 12:06:28,301 - build_rtree - INFO - ---------------------------- Build R-tree ----------------------------
+2019-04-24 12:07:16,581 - build_rtree - INFO - Load train trajectory: ./data/processed/gps_20161002_trajectory.txt
+2019-04-24 12:20:00,082 - build_rtree - INFO - Output rtree_id_dict: ./data/interim/gps_20161002_trajectory/rtree_id_dict_q_35.txt
+2019-04-24 12:20:00,098 - build_rtree - INFO - Output R-tree: ./data/interim/gps_20161002_trajectory/my_rtree_q_35
+2019-04-24 14:33:55,143 - build_rtree - INFO - exec time: 8035.019182920456
+2019-04-24 14:33:55,170 - build_rtree - INFO - Finished building R-tree

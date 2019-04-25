@@ -1,7 +1,8 @@
-from os import path
-from src.features.helper import *
+import os
 import sys
-sys.path.append(path.abspath('/Users/mingxidai/Documents/Master/traj-dist-master'))
+from os import path
+sys.path.append(path.abspath(os.path.abspath(os.path.join(os.getcwd(), '..', 'traj-dist-master'))))
+from src.features.helper import *
 import traj_dist.distance as tdist
 import numpy as np
 import logging

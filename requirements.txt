@@ -13,3 +13,5 @@ pandas
 numpy
 Rtree
 scikit-learn
+statistics
+math

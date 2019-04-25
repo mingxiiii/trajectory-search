@@ -34,6 +34,7 @@ def main(query, train, qgram_size, user_k):
             truthLines = fTruth.readlines()
             resultLines = fResult.readlines()
             if len(resultLines) < user_k + 1 or len(truthLines) < user_k + 1:
+                print('skipped')
                 continue
             # because first line is ID ,so we start from second line, that's why i is in range (1 , k+1)
             filesCounter += 1
